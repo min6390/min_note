@@ -6,16 +6,38 @@ import {
   TouchableOpacity, Dimensions,
 } from 'react-native';
 import textSize from '../asset/elements/textSize';
+import {EventRegister} from "react-native-event-listeners";
+import Schema from '../database/Schema';
 
 export default class Notes extends React.Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      arr: DATA,
+      arr: [],
     };
   }
+  componentDidMount() {
+    this.arr = EventRegister.addEventListener('arrNotes', this.reload);
+    this.load();
+  }
 
+  componentWillUnmount() {
+    super.componentWillUnmount();
+    EventRegister.removeEventListener(this.arr);
+  }
+
+  load() {
+    const db = new Schema();
+    const array = db.read('NotesSchema');
+    this.setState({
+      arr: array,
+    });
+  }
+
+  reload = () => {
+    this.load();
+  };
   render() {
     const {arr} = this.state;
     return (
@@ -23,10 +45,11 @@ export default class Notes extends React.Component {
         {arr.map((values, index) => {
           return (
             <View key={index} style={{flexDirection: 'row'}}>
-              <TouchableOpacity style={[styles.content, styles.shadowButton]}>
-                <Text style={{fontSize: textSize.largeSize}}>{values.id}</Text>
+              <TouchableOpacity style={[styles.content, styles.shadowButton,{backgroundColor: values.colors}]}>
+                <Text style={{fontSize: textSize.largeSize}}>{values.name}</Text>
                 <View style={styles.lines}/>
-                <Text>{values.title}</Text>
+                <Text>{values.content}</Text>
+                <Text>{values.time.toString()}</Text>
               </TouchableOpacity>
             </View>
           );

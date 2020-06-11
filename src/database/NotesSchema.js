@@ -5,6 +5,7 @@ export const NotesSchema = {
     id:'int',
     name:'string',
     content:'string',
-    time:'date'
+    time:'date',
+    colors:'string'
   }
 };

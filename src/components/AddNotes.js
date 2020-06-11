@@ -2,6 +2,8 @@ import React from 'react';
 import {View, Text, Dimensions, StyleSheet, Modal, TouchableOpacity, TextInput, Image} from 'react-native';
 import colors from '../asset/elements/colors';
 import textSize from '../asset/elements/textSize';
+import {EventRegister} from "react-native-event-listeners";
+import Schema from '../database/Schema';
 
 export default class AddNotes extends React.Component {
 
@@ -25,6 +27,26 @@ export default class AddNotes extends React.Component {
 
   onPress = () => {
     this.toggleModalVisible();
+    const {name, content} = this.state;
+    const object = {
+      id: new Date().getTime(),
+      created : new Date(),
+      name: name,
+      content: content,
+      colors: 'rgb(' + (Math.floor(Math.random() * 256)) + ',' + (Math.floor(Math.random() * 256) + ',' + (Math.floor(Math.random() * 256))) + ')',
+      time: new Date().toISOString()
+    };
+    const db = new Schema();
+    db.create('NotesSchema', object, (result) => {
+      if (result) {
+        EventRegister.emitEvent('arrNotes');
+        this.setState({
+          name: '',
+          content: '',
+          backgroundColor: '',
+        });
+      }
+    });
   };
   onPressCancel = () => {
     this.toggleModalVisible();
