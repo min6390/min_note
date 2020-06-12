@@ -30,7 +30,6 @@ export default class AddNotes extends React.Component {
     const {name, content} = this.state;
     const object = {
       id: new Date().getTime(),
-      created : new Date(),
       name: name,
       content: content,
       colors: 'rgb(' + (Math.floor(Math.random() * 256)) + ',' + (Math.floor(Math.random() * 256) + ',' + (Math.floor(Math.random() * 256))) + ')',
@@ -70,6 +69,7 @@ export default class AddNotes extends React.Component {
             value={this.state.name}/>
           <TextInput
             placeholder={'Nội dung'}
+            maxLength={20}
             style={styles.textInputContent}
             multiline={true}
             onChangeText={this.onChangTextContent}

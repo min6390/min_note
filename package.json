@@ -18,6 +18,7 @@
     "react-native-safe-area-context": "^3.0.3",
     "react-native-screens": "^2.8.0",
     "react-native-stack": "^1.0.0-alpha11",
+    "react-native-swipeable": "^0.6.0",
     "react-navigation": "^4.3.9",
     "realm": "^3.3.0"
   },
