@@ -11,7 +11,7 @@ export default class Schema {
       }),
     });
   }
-
+  // viết dữ liệu
   create(schema, array, callback) {
     try {
       if (array && !Array.isArray(array)) {
@@ -27,7 +27,7 @@ export default class Schema {
       callback(false);
     }
   }
-
+  //đọc dữ liệu lên
   read(schema, filter, sort) {
     let array = this.realm.objects(schema);
     if (filter) {
@@ -38,13 +38,13 @@ export default class Schema {
     }
     return Array.from(array);
   }
-
+  //update lại dữ liệu
   update(callback) {
     this.realm.write(() => {
       callback();
     });
   }
-
+  // xóa nhiều phần tử theo điều kiện - k điều kiện xóa sạch
   delete(schema, filter, sort) {
     this.realm.write(() => {
       let array = this.realm.objects(schema);
@@ -57,17 +57,17 @@ export default class Schema {
       this.realm.delete(array);
     });
   }
-
+  // xóa sạch
   clear() {
     this.realm.write(() => {
       this.realm.deleteAll();
     });
   }
-
+  //đếm số note
   count(schema, filter) {
     return this.read(schema, filter).length;
   }
-
+  // xóa 1 phần tử trong note
   remove(object, callback) {
     try {
       this.realm.write(() => {

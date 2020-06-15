@@ -11,6 +11,7 @@ import Schema from '../database/Schema';
 import {RectButton} from 'react-native-gesture-handler';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import colors from '../asset/elements/colors';
+import AddNotes from './AddNotes';
 
 
 export default class Notes extends React.Component {
@@ -43,25 +44,32 @@ export default class Notes extends React.Component {
   reload = () => {
     this.load();
   };
+  // ()=>()=>{} - kiểu arrow function cho thêm giá trị đầu vào
+  onPress =(values)=> () => {
+ //   console.log(JSON.stringify(values));
+    const db = new Schema();
+    db.remove(values, ()=>{this.load()})
+    // db.delete('NotesSchema');
+    // this.load();
+  };
 
-
-
-  renderSwipeableRightRow = (progress) => {
+  renderSwipeableRightRow= (values)=>  (progress) => {
     const trans = progress.interpolate({inputRange: [0, 1], outputRange: [75, 0]});
     return (
-      <View style={{width: 75,marginVertical:3 }}>
+      <View style={{width: 75, marginVertical: 3}}>
         <Animated.View style={{flex: 1, transform: [{translateX: trans}]}}>
-          <RectButton style={[styles.action,{backgroundColor:colors.secondaryFirstColor}]} onPress={() => {
-            console.log('aaa');
-          }}>
-            <Text style={{color:'white',fontWeight:'bold'}}>Xóa</Text>
+          <RectButton style={[styles.action, {backgroundColor: colors.secondaryFirstColor}]} onPress={this.onPress(values)}>
+            <Text style={{color: 'white', fontWeight: 'bold'}}>Xóa</Text>
           </RectButton>
-          <RectButton style={[styles.action,{backgroundColor:colors.secondaryThirdColor}]} onPress={() => {
-            console.log('aaa');
+          <RectButton style={[styles.action, {backgroundColor: colors.secondaryThirdColor}]} onPress={() => {
+            if (this.addNotes) {
+              this.addNotes.toggleModalVisible();
+            }
           }}>
-            <Text  style={{color:'white',fontWeight:'bold'}}>Sửa</Text>
+            <Text style={{color: 'white', fontWeight: 'bold'}}>Sửa</Text>
           </RectButton>
         </Animated.View>
+        <AddNotes ref={ref => this.addNotes = ref}/>
       </View>
     );
   };
@@ -72,14 +80,18 @@ export default class Notes extends React.Component {
     return (
       <View style={styles.container}>
         {arr.map((values, index) => {
+          const date = values.time.getDate() + '/' + values.time.getMonth() + '/' + values.time.getFullYear();
+          const time = values.time.getHours() + ':' + values.time.getMinutes() + ':' + values.time.getSeconds();
           return (
             <View key={index}>
-              <Swipeable key={index} renderRightActions={this.renderSwipeableRightRow}>
+              <Swipeable key={index} renderRightActions={this.renderSwipeableRightRow(values)}>
                 <TouchableOpacity style={[styles.content, styles.shadowButton, {backgroundColor: values.colors}]}>
                   <Text style={{fontSize: textSize.largeSize}}>{values.name}</Text>
                   <View style={styles.lines}/>
                   <Text>{values.content}</Text>
-                  <Text>{values.time.toString()}</Text>
+                  <View style={{alignItems: 'flex-end', justifyContent: 'flex-end', flex: 1}}>
+                    <Text>{time + ' ' + date}</Text>
+                  </View>
                 </TouchableOpacity>
               </Swipeable>
             </View>
@@ -102,8 +114,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     flex: 1,
     backgroundColor: 'pink',
-    marginLeft:3,
-    marginVertical:1.5
+    marginLeft: 3,
+    marginVertical: 1.5,
   },
 
   content: {

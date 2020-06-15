@@ -16,6 +16,7 @@ export default class NotesScreen extends React.Component {
   render() {
     return (
       <View style={styles.container}>
+
         <ScrollView style={{flex: 1, backgroundColor: colors.backgroundColor}}>
           <Notes/>
         </ScrollView>

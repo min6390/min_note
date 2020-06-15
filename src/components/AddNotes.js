@@ -33,7 +33,7 @@ export default class AddNotes extends React.Component {
       name: name,
       content: content,
       colors: 'rgb(' + (Math.floor(Math.random() * 256)) + ',' + (Math.floor(Math.random() * 256) + ',' + (Math.floor(Math.random() * 256))) + ')',
-      time: new Date().toISOString()
+      time: new Date()
     };
     const db = new Schema();
     db.create('NotesSchema', object, (result) => {
@@ -69,7 +69,6 @@ export default class AddNotes extends React.Component {
             value={this.state.name}/>
           <TextInput
             placeholder={'Nội dung'}
-            maxLength={20}
             style={styles.textInputContent}
             multiline={true}
             onChangeText={this.onChangTextContent}
